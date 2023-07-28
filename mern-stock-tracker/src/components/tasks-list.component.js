@@ -2,20 +2,29 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Task = props => (
+const Task = props => {
+  const originalcreated = props.task.dateCreated.substring(0, 10);
+  const [yearc, monthc, dayc] = originalcreated.split('-');
+  const originaldeadline = props.task.dateDeadline.substring(0, 10);
+  const [yeard, monthd, dayd] = originaldeadline.split('-');
+
+  const reversedDatecreated = `${dayc}/${monthc}/${yearc}`;
+  const reversedDatedeadline = `${dayd}/${monthd}/${yeard}`;
+  return(
   <tr>
     <td>{props.task.userassigned}</td>
     <td>{props.task.taskname}</td>
     <td>{props.task.description}</td>
     <td>{props.task.value}</td>
-    <td>{props.task.dateCreated.substring(0,10)}</td>
-    <td>{props.task.dateDeadline.substring(0,10)}</td>
+    <td>{reversedDatecreated}</td>
+    <td>{reversedDatedeadline}</td>
     <td>{props.task.tag}</td>
     <td>
-      <a href="#" onClick={() => { props.deleteTask(props.task._id) }}>completed</a>
+      <Link to ={"/edit/"+props.task._id}>edit</Link> | <a href="#" onClick={() => { props.deleteTask(props.task._id) }}>delete</a>
     </td>
   </tr>
-)
+  );
+}
 
 export default class TasksList extends Component {
   constructor(props) {

@@ -1,162 +1,142 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
-import { useParams } from 'react-router-dom';
+import 'react-datepicker/dist/react-datepicker.css';
 
+const EditTask = () => {
+  const { id } = useParams();
 
-export default class EditStock extends Component {
-  
-  constructor(props) {
-    super(props);
-    
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangeDescription = this.onChangeDescription.bind(this);
-    this.onChangeQuantity = this.onChangeQuantity.bind(this);
-    this.onChangeDate = this.onChangeDate.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+  const [userassigned, setUserassigned] = useState('');
+  const [taskname, setTaskname] = useState('');
+  const [description, setDescription] = useState('');
+  const [value, setValue] = useState(0);
+  const [dateCreated, setDateCreated] = useState(new Date());
+  const [dateDeadline, setDateDeadline] = useState(new Date());
+  const [tag, setTag] = useState('');
+  const [users, setUsers] = useState([]);
 
-    this.state = {
-      username: '',
-      description: '',
-      quantity: 0,
-      date: new Date(),
-      users: []
-      
-    }
-  }
-  
-  
-
-  componentDidMount() {
-    
-    axios.get('http://localhost:5000/stocks/'+this.props.match.params.id)
+  useEffect(() => {
+    axios.get('http://localhost:5000/tasks/' + id)
       .then(response => {
-        this.setState({
-          username: response.data.username,
-          description: response.data.description,
-          quantity: response.data.quantity,
-          date: new Date(response.data.date)
-        })   
+        setUserassigned(response.data.userassigned);
+        setTaskname(response.data.taskname);
+        setDescription(response.data.description);
+        setValue(response.data.value);
+        setDateCreated(new Date(response.data.dateCreated));
+        setDateDeadline(new Date(response.data.dateDeadline));
+        setTag(response.data.tag);
       })
       .catch(function (error) {
         console.log(error);
-      })
+      });
 
     axios.get('http://localhost:5000/users/')
       .then(response => {
         if (response.data.length > 0) {
-          this.setState({
-            users: response.data.map(user => user.username),
-          })
+          setUsers(response.data.map(user => user.username));
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+      });
+  }, [id]);
 
-  }
-
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value
-    })
-  }
-
-  onChangeDescription(e) {
-    this.setState({
-      description: e.target.value
-    })
-  }
-
-  onChangeQuantity(e) {
-    this.setState({
-      quantity: e.target.value
-    })
-  }
-
-  onChangeDate(date) {
-    this.setState({
-      date: date
-    })
-  }
-  
-
-  onSubmit(e) {
-    
+  const onSubmit = (e) => {
     e.preventDefault();
+    const task = {
+      userassigned,
+      taskname,
+      description,
+      value,
+      dateCreated,
+      dateDeadline,
+      tag
+    };
 
-    const stock = {
-      username: this.state.username,
-      description: this.state.description,
-      quantity: this.state.quantity,
-      date: this.state.date
-    }
+    console.log(task);
 
-    console.log(stock);
+    axios.post('http://localhost:5000/tasks/update/' + id, task)
+      .then(res => console.log(res.data))
+      .catch(err =>  console.log(err));
 
-    axios.post('http://localhost:5000/stocks/update/' + this.props.match.params.id, stock)
-      .then(res => console.log(res.data));
+    window.location = '/admin';
+  };
 
-    window.location = '/';
-  }
-
-  render() {
-    return (
-      
+  return (
     <div>
-      <h3>Edit Stock Log</h3>
-      <form onSubmit={this.onSubmit}>
-        <div className="form-group"> 
-          <label>Username: </label>
-          <select ref="userInput"
-              required
-              className="form-control"
-              value={this.state.username}
-              onChange={this.onChangeUsername}>
-              {
-                this.state.users.map(function(user) {
-                  return <option 
-                    key={user}
-                    value={user}>{user}
-                    </option>;
-                })
-              }
+      <h3>Edit Task</h3>
+      <form onSubmit={onSubmit}>
+        <div className="form-group">
+          <label>User Assigned: </label>
+          <select
+            required
+            className="form-control"
+            value={userassigned}
+            onChange={(e) => setUserassigned(e.target.value)}
+          >
+            {users.map((user) => (
+              <option key={user} value={user}>
+                {user}
+              </option>
+            ))}
           </select>
         </div>
-        <div className="form-group"> 
+        <div className="form-group">
+          <label>Task Name: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={taskname}
+            onChange={(e) => setTaskname(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
           <label>Description: </label>
-          <input  type="text"
-              required
-              className="form-control"
-              value={this.state.description}
-              onChange={this.onChangeDescription}
-              />
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </div>
         <div className="form-group">
-          <label>Quantity: </label>
-          <input 
-              type="text" 
-              className="form-control"
-              value={this.state.quantity}
-              onChange={this.onChangeQuantity}
-              />
+          <label>Value: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
         </div>
         <div className="form-group">
-          <label>Date: </label>
+          <label>Date Created: </label>
           <div>
-            <DatePicker
-              selected={this.state.date}
-              onChange={this.onChangeDate}
-            />
+            <DatePicker selected={dateCreated} onChange={setDateCreated} />
           </div>
         </div>
-
         <div className="form-group">
-          <input type="submit" value="Edit Stock Log" className="btn btn-primary" />
+          <label>Date Deadline: </label>
+          <div>
+            <DatePicker selected={dateDeadline} onChange={setDateDeadline} />
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Tag: </label>
+          <input
+            type="text"
+            required
+            className="form-control"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <input type="submit" value="Edit Task" className="btn btn-primary" />
         </div>
       </form>
     </div>
-    )
-  }
-}
+  );
+};
+
+export default EditTask;

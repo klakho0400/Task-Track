@@ -3,20 +3,6 @@ import DatePicker from "react-datepicker";
 import axios from 'axios';
 import "react-datepicker/dist/react-datepicker.css"
 
-// componentDidMount(){
-//   axios.get('http://localhost:5000/users/')
-//   .then(response => {
-//     if(response.data.length > 0)
-//     {
-//         this.setState({
-//             users: response.data.map(user => user.userassigned),
-//             userassigned: response.data[0].userassigned
-//         });
-//     }
-//   })
-// }
-
-
 export default class CreateTask extends Component{
   constructor(props){
       super(props);

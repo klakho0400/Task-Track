@@ -16,7 +16,7 @@ function App() {
     <Navbar /> 
     <br/> 
         <Routes> 
-            <Route path="/" exact element={<TasksList />} /> 
+            <Route path="/admin" exact element={<TasksList />} /> 
             <Route path="/edit/:id" element={<EditTask />} /> 
             <Route path="/log-task" element={<CreateTask />} /> 
             <Route path="/create-user" element={<CreateUser />} /> 
