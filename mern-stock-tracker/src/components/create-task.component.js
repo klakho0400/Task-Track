@@ -25,6 +25,7 @@ export default class CreateTask extends Component{
           dateCreated: new Date(),
           dateDeadline: new Date(),
           tag: [],
+          tagInput: "",
           users: [],
       }
   }
@@ -75,7 +76,7 @@ this.setState({
 }
 onChangeTag(e){
   this.setState({
-      tag: e.target.value
+      tagInput: e.target.value
   });
   }
 
@@ -89,7 +90,7 @@ onChangeTag(e){
           value: this.state.value,
           dateCreated: this.state.dateCreated,
           dateDeadline: this.state.dateDeadline,
-          tag: this.state.tag
+          tag: this.state.tagInput.split(",").map(tag => tag.trim())
       }
 
       console.log(task);
@@ -98,7 +99,7 @@ onChangeTag(e){
       .then(res => console.log(res.data));
 
       
-      window.location = '/';
+      window.location = '/admin';
   }
 
 
@@ -173,14 +174,15 @@ onChangeTag(e){
                   
               </div>
               <div className="form-group"> 
-                <label>Tag: </label>
-                <input  type="text"
-                    required
-                    className="form-control"
-                    value={this.state.tag}
-                    onChange={this.onChangeTag}
-                    />
-              </div>
+            <label>Tag: </label>
+            <input
+              type="text"
+              required
+              className="form-control"
+              value={this.state.tagInput}
+              onChange={this.onChangeTag}
+            />
+          </div>
                                             
               <div className="form-group">
                 <input type="submit" value="Log Task" className="btn btn-primary" />

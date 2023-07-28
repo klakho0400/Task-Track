@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
 import axios from 'axios';
 
 const Task = props => {
@@ -10,6 +11,36 @@ const Task = props => {
 
   const reversedDatecreated = `${dayc}/${monthc}/${yearc}`;
   const reversedDatedeadline = `${dayd}/${monthd}/${yeard}`;
+
+  const renderTags = () => {
+    return props.task.tag.map((tag, index) => (
+      <span
+        key={index}
+        className="tag rounded-pill"
+        style={{
+          backgroundColor: generateColorForTag(tag),
+          padding: '6px 10px',
+          color: 'white',
+          marginRight: '10px' /* Adjust this value to control the spacing */
+        }}
+      >
+        {tag}
+      </span>
+    ));
+  };
+
+
+  const generateColorForTag = (tag) => {
+    // Simple hash function to generate a unique color for each tag
+    let hash = 0;
+    for (let i = 0; i < tag.length; i++) {
+      hash = tag.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const color = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return '#' + ('00000'.substring(0, 6 - color.length) + color);
+  };
+
+
   return(
   <tr>
     <td>{props.task.userassigned}</td>
@@ -18,7 +49,7 @@ const Task = props => {
     <td>{props.task.value}</td>
     <td>{reversedDatecreated}</td>
     <td>{reversedDatedeadline}</td>
-    <td>{props.task.tag}</td>
+    <td>{renderTags()} &nbsp;</td>
     <td>
       <Link to ={"/edit/"+props.task._id}>edit</Link> | <a href="#" onClick={() => { props.deleteTask(props.task._id) }}>delete</a>
     </td>
@@ -53,6 +84,8 @@ export default class TasksList extends Component {
       tasks: this.state.tasks.filter(el => el._id !== id)
     })
   }
+
+  
 
   taskList() {
     return this.state.tasks.map(currenttask => {

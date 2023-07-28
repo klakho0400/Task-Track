@@ -13,7 +13,7 @@ const EditTask = () => {
   const [value, setValue] = useState(0);
   const [dateCreated, setDateCreated] = useState(new Date());
   const [dateDeadline, setDateDeadline] = useState(new Date());
-  const [tag, setTag] = useState('');
+  const [tag, setTag] = useState([]); // Use an empty array for tags
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const EditTask = () => {
         setValue(response.data.value);
         setDateCreated(new Date(response.data.dateCreated));
         setDateDeadline(new Date(response.data.dateDeadline));
-        setTag(response.data.tag);
+        setTag(response.data.tag); // Update to set array of tags
       })
       .catch(function (error) {
         console.log(error);
@@ -55,7 +55,7 @@ const EditTask = () => {
 
     axios.post('http://localhost:5000/tasks/update/' + id, task)
       .then(res => console.log(res.data))
-      .catch(err =>  console.log(err));
+      .catch(err => console.log(err));
 
     window.location = '/admin';
   };
@@ -127,8 +127,8 @@ const EditTask = () => {
             type="text"
             required
             className="form-control"
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            value={tag.join(', ')} // Convert array to string with comma and space
+            onChange={(e) => setTag(e.target.value.split(',').map(item => item.trim()))} // Convert string to array
           />
         </div>
         <div className="form-group">

@@ -26,13 +26,14 @@ const userSchema = new Schema({
         required: true,
     },
 
-    taskComplete:{
-        type:[String],
-    },
-
-    taskIncomplete:{
-        type:[String],
-    },
+    taskComplete: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Task',
+    }],
+    taskIncomplete: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Task',
+    }],
 
 },{
     timestamps: true,
