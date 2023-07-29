@@ -13,11 +13,11 @@ const EditTask = () => {
   const [value, setValue] = useState(0);
   const [dateCreated, setDateCreated] = useState(new Date());
   const [dateDeadline, setDateDeadline] = useState(new Date());
-  const [tag, setTag] = useState([]); // Use an empty array for tags
+  const [tag, setTag] = useState([]);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/tasks/' + id)
+    axios.get(`http://localhost:5000/tasks/${id}`)
       .then(response => {
         setUserassigned(response.data.userassigned);
         setTaskname(response.data.taskname);
@@ -25,9 +25,9 @@ const EditTask = () => {
         setValue(response.data.value);
         setDateCreated(new Date(response.data.dateCreated));
         setDateDeadline(new Date(response.data.dateDeadline));
-        setTag(response.data.tag); // Update to set array of tags
+        setTag(response.data.tag);
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
       });
 
@@ -53,22 +53,56 @@ const EditTask = () => {
 
     console.log(task);
 
-    axios.post('http://localhost:5000/tasks/update/' + id, task)
+    axios.post(`http://localhost:5000/tasks/update/${id}`, task)
       .then(res => console.log(res.data))
       .catch(err => console.log(err));
 
     window.location = '/admin';
   };
 
+  const labelStyle = {
+    fontWeight: "bold",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "8px",
+    fontSize: "16px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    marginTop: "5px",
+  };
+
+  const selectStyle = {
+    width: "100%",
+    padding: "8px",
+    fontSize: "16px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    marginTop: "5px",
+  };
+
+  const submitButtonStyle = {
+    width: "100%",
+    padding: "10px",
+    fontSize: "18px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    marginTop: "10px",
+    cursor: "pointer",
+  };
+
   return (
     <div>
       <h3>Edit Task</h3>
       <form onSubmit={onSubmit}>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>User Assigned: </label>
           <select
             required
-            className="form-control"
+            style={selectStyle}
             value={userassigned}
             onChange={(e) => setUserassigned(e.target.value)}
           >
@@ -79,60 +113,60 @@ const EditTask = () => {
             ))}
           </select>
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Task Name: </label>
           <input
             type="text"
             required
-            className="form-control"
+            style={inputStyle}
             value={taskname}
             onChange={(e) => setTaskname(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Description: </label>
           <input
             type="text"
             required
-            className="form-control"
+            style={inputStyle}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Value: </label>
           <input
             type="text"
             required
-            className="form-control"
+            style={inputStyle}
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Date Created: </label>
           <div>
             <DatePicker selected={dateCreated} onChange={setDateCreated} />
           </div>
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Date Deadline: </label>
           <div>
             <DatePicker selected={dateDeadline} onChange={setDateDeadline} />
           </div>
         </div>
-        <div className="form-group">
+        <div style={{ ...labelStyle, ...inputStyle }}>
           <label>Tag: </label>
           <input
             type="text"
             required
-            className="form-control"
-            value={tag.join(', ')} // Convert array to string with comma and space
-            onChange={(e) => setTag(e.target.value.split(',').map(item => item.trim()))} // Convert string to array
+            style={inputStyle}
+            value={tag.join(', ')}
+            onChange={(e) => setTag(e.target.value.split(',').map(item => item.trim()))}
           />
         </div>
-        <div className="form-group">
-          <input type="submit" value="Edit Task" className="btn btn-primary" />
+        <div style={submitButtonStyle}>
+          <input type="submit" value="Edit Task" />
         </div>
       </form>
     </div>

@@ -103,92 +103,123 @@ onChangeTag(e){
   }
 
 
-  render(){
-      return (
-          <div>
-            <h3>Log New Task</h3>
-            <form onSubmit={this.onSubmit}>
-              <div className="form-group"> 
-                <label>User Assigned: </label>
-                <select ref="userInput"
-                    required
-                    className="form-control"
-                    value={this.state.userassigned}
-                    onChange={this.onChangeUserassigned}>
-                    {
-                      this.state.users.map(function(user)
-                      {
-                       return <option
-                       key = {user} 
-                       value = {user}>{user}</option>
-                      })
-    
-                    }
-                    </select>
-              </div>
-              <div className="form-group"> 
-                <label>Task Name: </label>
-                <input  type="text"
-                    required
-                    className="form-control"
-                    value={this.state.taskname}
-                    onChange={this.onChangeTaskname}
-                    />
-              </div>
-              <div className="form-group"> 
-                <label>Description: </label>
-                <input  type="text"
-                    required
-                    className="form-control"
-                    value={this.state.description}
-                    onChange={this.onChangeDescription}
-                    />
-              </div>
-              <div className="form-group"> 
-                <label>Value: </label>
-                <input  type="text"
-                    required
-                    className="form-control"
-                    value={this.state.value}
-                    onChange={this.onChangeValue}
-                    />
-              </div>
-              <div className="form-group"> 
-                <label>Date Created: </label>
-                <div>
-                  <DatePicker
-                  selected={this.state.dateCreated}
-                  onChange = {this.onChangeDateCreated}
-                  />
-                </div>
-                  
-              </div>
-              <div className="form-group"> 
-                <label>Date Deadline: </label>
-                <div>
-                  <DatePicker
-                  selected={this.state.dateDeadline}
-                  onChange = {this.onChangeDateDeadline}
-                  />
-                </div>
-                  
-              </div>
-              <div className="form-group"> 
-            <label>Tag: </label>
+  render() {
+    const inputStyle = {
+      width: "100%",
+      padding: "8px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      marginTop: "5px",
+    };
+
+    const selectStyle = {
+      width: "100%",
+      padding: "8px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      marginTop: "5px",
+    };
+
+    const buttonStyle = {
+      width: "100%",
+      padding: "10px",
+      fontSize: "18px",
+      backgroundColor: "#007bff",
+      color: "#fff",
+      border: "none",
+      borderRadius: "4px",
+      marginTop: "10px",
+      cursor: "pointer",
+    };
+
+    return (
+      <div>
+        <h3>Log New Task</h3>
+        <form onSubmit={this.onSubmit}>
+          <div className="form-group">
+            <label>User Assigned:</label>
+            <select
+              ref="userInput"
+              required
+              style={selectStyle}
+              value={this.state.userassigned}
+              onChange={this.onChangeUserassigned}
+            >
+              {this.state.users.map(function (user) {
+                return <option key={user} value={user}>{user}</option>;
+              })}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Task Name:</label>
             <input
               type="text"
               required
-              className="form-control"
+              style={inputStyle}
+              value={this.state.taskname}
+              onChange={this.onChangeTaskname}
+            />
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <input
+              type="text"
+              required
+              style={inputStyle}
+              value={this.state.description}
+              onChange={this.onChangeDescription}
+            />
+          </div>
+          <div className="form-group">
+            <label>Value:</label>
+            <input
+              type="text"
+              required
+              style={inputStyle}
+              value={this.state.value}
+              onChange={this.onChangeValue}
+            />
+          </div>
+          <div className="form-group">
+            <label>Date Created:</label>
+            <div>
+              <DatePicker
+                selected={this.state.dateCreated}
+                onChange={this.onChangeDateCreated}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Date Deadline:</label>
+            <div>
+              <DatePicker
+                selected={this.state.dateDeadline}
+                onChange={this.onChangeDateDeadline}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Tag:</label>
+            <input
+              type="text"
+              required
+              style={inputStyle}
               value={this.state.tagInput}
               onChange={this.onChangeTag}
             />
           </div>
-                                            
-              <div className="form-group">
-                <input type="submit" value="Log Task" className="btn btn-primary" />
-              </div>
-            </form>
+
+          <div className="form-group">
+            <input
+              type="submit"
+              value="Log Task"
+              style={buttonStyle}
+            />
           </div>
-        )
+        </form>
+      </div>
+    );
   }
 }

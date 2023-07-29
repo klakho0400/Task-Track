@@ -104,60 +104,82 @@ export default class CreateUser extends Component {
       rating: 0,
       email: "",
       phone: "",
-      taskComplete: "",
-      taskIncomplete: "",
+      taskComplete: [],
+      taskIncomplete: [],
     });
   }
 
   render() {
+    const formGroupStyle = {
+      marginBottom: "15px",
+    };
+
+    const labelStyle = {
+      display: "block",
+      marginBottom: "5px",
+      fontWeight: "bold",
+    };
+
+    const inputStyle = {
+      width: "100%",
+      padding: "8px",
+      fontSize: "16px",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+    };
+
+    const checkboxContainerStyle = {
+      marginBottom: "5px",
+    };
+
     return (
       <div>
         <h3>Create New User</h3>
         <form onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <label>Username: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Username:</label>
             <input
               type="text"
               required
-              className="form-control"
+              style={inputStyle}
               value={this.state.username}
               onChange={this.onChangeUsername}
             />
           </div>
-          <div className="form-group">
-            <label>Rating: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Rating:</label>
             <input
               type="text"
               required
-              className="form-control"
+              style={inputStyle}
               value={this.state.rating}
               onChange={this.onChangeRating}
             />
           </div>
-          <div className="form-group">
-            <label>Email: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Email:</label>
             <input
               type="text"
               required
-              className="form-control"
+              style={inputStyle}
               value={this.state.email}
               onChange={this.onChangeEmail}
             />
           </div>
-          <div className="form-group">
-            <label>Phone: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Phone:</label>
             <input
               type="text"
               required
-              className="form-control"
+              style={inputStyle}
               value={this.state.phone}
               onChange={this.onChangePhone}
             />
           </div>
-          <div className="form-group">
-            <label>Task Complete: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Task Complete:</label>
             {this.state.tasks.map(task => (
-              <div key={task._id}>
+              <div key={task._id} style={checkboxContainerStyle}>
                 <input
                   type="checkbox"
                   value={task._id}
@@ -168,10 +190,10 @@ export default class CreateUser extends Component {
               </div>
             ))}
           </div>
-          <div className="form-group">
-            <label>Task Incomplete: </label>
+          <div style={formGroupStyle}>
+            <label style={labelStyle}>Task Incomplete:</label>
             {this.state.tasks.map(task => (
-              <div key={task._id}>
+              <div key={task._id} style={checkboxContainerStyle}>
                 <input
                   type="checkbox"
                   value={task._id}
@@ -182,8 +204,20 @@ export default class CreateUser extends Component {
               </div>
             ))}
           </div>
-          <div className="form-group">
-            <input type="submit" value="Create User" className="btn btn-primary" />
+          <div style={formGroupStyle}>
+            <input
+              type="submit"
+              value="Create User"
+              style={{
+                padding: "10px",
+                fontSize: "18px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            />
           </div>
         </form>
       </div>
