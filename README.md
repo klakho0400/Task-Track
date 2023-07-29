@@ -1,4 +1,4 @@
-# Task-Track - MERN Stack Task Management Application
+# TaskTrack - MERN Stack Task Management Application
 
 The Task Track App is a sophisticated task management application built on the MERN stack (MongoDB, Express, React, Node.js). It allows users to track their tasks, assign them to specific users, add color-coded tags for easy categorization, filter tasks by tags, sort tasks by deadline or value, and perform editing and deletion operations.
 
