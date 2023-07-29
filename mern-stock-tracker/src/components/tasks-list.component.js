@@ -76,10 +76,13 @@ export default class TasksList extends Component {
 
     this.deleteTask = this.deleteTask.bind(this);
     this.handleTagFilter = this.handleTagFilter.bind(this);
+    this.toggleSortByDeadline = this.toggleSortByDeadline.bind(this);
+    this.toggleSortByValue = this.toggleSortByValue.bind(this);
 
     this.state = {
       tasks: [],
       sortByDeadlineAscending: true,
+      sortByValueAscending: true, // New state property for sorting by value
       selectedTag: null,
     };
   }
@@ -103,46 +106,6 @@ export default class TasksList extends Component {
     })
   }
 
-
-  knapsackTaskAllocation(tasks) {
-    // Sort tasks in descending order of value
-    const sortedTasks = tasks.sort((a, b) => b.value - a.value);
-
-    const numTasks = sortedTasks.length;
-    const maxDeadline = Math.max(...sortedTasks.map(task => task.dateDeadline));
-
-    // Set a reasonable upper limit for maxDeadline, e.g., 100
-    const maxAllowedDeadline = 100;
-    const finalMaxDeadline = Math.min(maxDeadline, maxAllowedDeadline);
-
-    // Create a 2D array to store the maximum value for each deadline and task combination
-    const dp = Array.from({ length: numTasks + 1 }, () => Array(finalMaxDeadline + 1).fill(0));
-
-    for (let i = 1; i <= numTasks; i++) {
-      for (let j = 1; j <= finalMaxDeadline; j++) {
-        const currentTask = sortedTasks[i - 1];
-        const valueWithCurrentTask = currentTask.dateDeadline >= j
-          ? dp[i - 1][j - 1] + currentTask.value
-          : dp[i - 1][j];
-
-        dp[i][j] = Math.max(dp[i - 1][j], valueWithCurrentTask);
-      }
-    }
-
-    // Backtrack to find the allocated tasks
-    const allocatedTasks = [];
-    let currentDeadline = finalMaxDeadline;
-    for (let i = numTasks; i > 0; i--) {
-      if (dp[i][currentDeadline] !== dp[i - 1][currentDeadline]) {
-        allocatedTasks.push(sortedTasks[i - 1]);
-        currentDeadline--;
-      }
-    }
-
-    return allocatedTasks;
-  }
-
-
   toggleSortByDeadline() {
     this.setState((prevState) => ({
       sortByDeadlineAscending: !prevState.sortByDeadlineAscending,
@@ -153,37 +116,33 @@ export default class TasksList extends Component {
       })
     }));
   }
-  
+
+  toggleSortByValue() {
+    this.setState((prevState) => ({
+      sortByValueAscending: !prevState.sortByValueAscending,
+      tasks: [...prevState.tasks].sort((a, b) => {
+        return prevState.sortByValueAscending ? a.value - b.value : b.value - a.value;
+      })
+    }));
+  }
+
   handleTagFilter(tag) {
     this.setState({ selectedTag: tag });
   }
 
   taskList() {
-    const { selectedTag, tasks, showKnapsackSorted } = this.state;
+    const { selectedTag, tasks } = this.state;
     const filteredTasks = selectedTag
       ? tasks.filter(task => task.tag.includes(selectedTag))
       : tasks;
 
-    let allocatedTasks;
-    if (showKnapsackSorted) {
-      allocatedTasks = this.knapsackTaskAllocation(filteredTasks);
-    } else {
-      allocatedTasks = filteredTasks;
-    }
-
-    return allocatedTasks.map(currenttask => {
+    return filteredTasks.map(currenttask => {
       return <Task task={currenttask} deleteTask={this.deleteTask} key={currenttask._id} />;
     });
   }
 
-  toggleShowKnapsackSorted() {
-    this.setState(prevState => ({
-      showKnapsackSorted: !prevState.showKnapsackSorted,
-    }));
-  }
-
   render() {
-    const { sortByDeadlineAscending, selectedTag, showKnapsackSorted } = this.state;
+    const { sortByDeadlineAscending, sortByValueAscending, selectedTag, tasks } = this.state;
     return (
       <div className="container mt-4">
         <h3>Logged Tasks</h3>
@@ -193,7 +152,12 @@ export default class TasksList extends Component {
               <th>UserAssigned</th>
               <th>Taskname</th>
               <th>Description</th>
-              <th>Value</th>
+              <th>
+                Value
+                <button onClick={() => this.toggleSortByValue()}>
+                  {sortByValueAscending ? "↑" : "↓"}
+                </button>
+              </th>
               <th>Date Created</th>
               <th>Date Deadline   <button onClick={() => this.toggleSortByDeadline()}>
           {sortByDeadlineAscending ? "↑" : "↓"}
@@ -233,9 +197,6 @@ export default class TasksList extends Component {
             </button>
           </div>
         <div>
-        {/* <button onClick={() => this.toggleShowKnapsackSorted()}>
-            {showKnapsackSorted ? "Show Unsorted" : "Show Knapsack Sorted"}
-          </button> */}
         </div>
       </div>
     )

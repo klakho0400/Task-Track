@@ -8,6 +8,13 @@ import CreateTask from './components/create-task.component';
 import CreateUser from './components/create-user.component';
 import TasksList from './components/tasks-list.component';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faTasks, faClipboardList, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+
+
+library.add(faTasks, faClipboardList, faUserPlus);
+
+
 
 function App() {
   return (

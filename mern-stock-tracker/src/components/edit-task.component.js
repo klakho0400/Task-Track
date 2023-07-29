@@ -82,7 +82,7 @@ const EditTask = () => {
     marginTop: "5px",
   };
 
-  const submitButtonStyle = {
+  const buttonStyle = {
     width: "100%",
     padding: "10px",
     fontSize: "18px",
@@ -165,9 +165,13 @@ const EditTask = () => {
             onChange={(e) => setTag(e.target.value.split(',').map(item => item.trim()))}
           />
         </div>
-        <div style={submitButtonStyle}>
-          <input type="submit" value="Edit Task" />
-        </div>
+        <div className="form-group">
+            <input
+              type="submit"
+              value="Edit Task"
+              style={buttonStyle}
+            />
+          </div>
       </form>
     </div>
   );
